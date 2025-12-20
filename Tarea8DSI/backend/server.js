@@ -27,7 +27,7 @@ db.connect((err) => {
 
 // Middleware
 app.use(cors({ 
-    origin: ['http://localhost:3000', 'https://tu-frontend.vercel.app'] 
+    origin: ['http://localhost:3000', 'https://pat8.vercel.app'] 
 }));
 app.use(express.json());
 
@@ -64,4 +64,5 @@ app.post('/login', (req, res) => {
 // Iniciar servidor
 app.listen(PORT, '0.0.0.0', () => {
     console.log(`🚀 Servidor corriendo en el puerto ${PORT}`);
+
 });
