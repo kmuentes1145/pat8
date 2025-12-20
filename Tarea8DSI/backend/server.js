@@ -27,16 +27,16 @@ db.connect((err) => {
 
 // Middleware
 app.use(cors({ 
-    origin: ['http://localhost:3000', 'https://pat8.vercel.app'] 
+    origin: ['http://localhost:3000', 'https://pat8.vercel.app'] // ✅ espacios eliminados
 }));
 app.use(express.json());
 
-// RUTAS (ejemplo simple)
+// Ruta de prueba
 app.get('/', (req, res) => {
     res.send('Backend funcionando ✅');
 });
 
-// Ejemplo de ruta de login (ajústalo a tus necesidades)
+// Ruta de login
 app.post('/login', (req, res) => {
     const { username, password } = req.body;
     const query = 'SELECT * FROM users WHERE username = ?';
@@ -64,22 +64,15 @@ app.post('/login', (req, res) => {
 // Iniciar servidor
 app.listen(PORT, '0.0.0.0', () => {
     console.log(`🚀 Servidor corriendo en el puerto ${PORT}`);
+});
 
-
-
-// Al final de tu server.js, después de app.listen
+// Manejo de errores globales (FUERA de app.listen)
 process.on('uncaughtException', (err) => {
     console.error('❌ Error no capturado:', err);
     process.exit(1);
 });
 
-process.on('unhandledRejection', (err) => {
-    console.error('❌ Promesa no manejada:', err);
+process.on('unhandledRejection', (reason, promise) => {
+    console.error('❌ Promesa no manejada:', reason);
     process.exit(1);
 });
-
-
-    
-
-});
-
