@@ -65,4 +65,21 @@ app.post('/login', (req, res) => {
 app.listen(PORT, '0.0.0.0', () => {
     console.log(`🚀 Servidor corriendo en el puerto ${PORT}`);
 
+
+
+// Al final de tu server.js, después de app.listen
+process.on('uncaughtException', (err) => {
+    console.error('❌ Error no capturado:', err);
+    process.exit(1);
 });
+
+process.on('unhandledRejection', (err) => {
+    console.error('❌ Promesa no manejada:', err);
+    process.exit(1);
+});
+
+
+    
+
+});
+
