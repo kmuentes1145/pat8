@@ -10,7 +10,15 @@
 </head>
 
 <body class="bg-light">
+<script>
+  // ✅ Define la URL del backend una sola vez
+  const API_BASE = 'https://pat8.up.railway.app';
 
+  // Luego usa `${API_BASE}` en todas las llamadas
+  fetch(`${API_BASE}/auth/login`, { ... })
+  fetch(`${API_BASE}/productos`, { ... })
+  // etc.
+</script>
 <script>
 /* 🔗 URL DEL BACKEND EN RAILWAY */
 const API_URL = "https://pat8-production.up.railway.app";
