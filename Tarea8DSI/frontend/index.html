@@ -216,7 +216,7 @@
         const password = document.getElementById('password').value;
 
         try {
-            const res = await fetch('http://localhost:5000/auth/login', {
+            const res = await fetch('https://pat8.vercel.app', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, password })
@@ -268,7 +268,7 @@
     const btnCancelar = document.getElementById('btnCancelar');
 
     function cargarProductos() {
-        fetch('http://localhost:5000/productos')
+        fetch('https://pat8.vercel.app')
             .then(res => res.json())
             .then(data => {
                 lista.innerHTML = '';
@@ -310,7 +310,7 @@
         };
 
         try {
-            const res = await fetch('http://localhost:5000' + url, {
+            const res = await fetch('https://pat8.vercel.app' + url, {
                 method: method,
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(producto)
@@ -333,7 +333,7 @@
     // ✅ FUNCIÓN EDITAR CORREGIDA
     window.editar = async function(id) {
         try {
-            const res = await fetch('http://localhost:5000/productos/1');
+            const res = await fetch('https://pat8.vercel.app/');
             if (!res.ok) throw new Error('No se pudo cargar el producto');
             
             const prod = await res.json();
@@ -360,7 +360,7 @@
 
     window.eliminar = function(id) {
         if (confirm('¿Eliminar este producto? Esta acción no se puede deshacer.')) {
-            fetch(`http://localhost:5000/productos/${id}`, {
+            fetch(`https://pat8.vercel.app/productos/${id}`, {
                 method: 'DELETE'
             })
             .then(() => cargarProductos())
@@ -369,7 +369,7 @@
     };
 
     function exportarExcel() {
-        fetch('http://localhost:5000/productos')
+        fetch('https://pat8.vercel.app//productos')
             .then(res => res.json())
             .then(productos => {
                 const data = productos.map(p => ({
