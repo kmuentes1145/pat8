@@ -2,6 +2,7 @@
 const mysql = require('mysql2');
 const bcrypt = require('bcryptjs');
 
+// Conexión a la base de datos (usa las mismas variables que server.js)
 const db = mysql.createConnection({
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
@@ -17,7 +18,7 @@ db.connect((err) => {
     }
     console.log('✅ Conectado a la base de datos');
 
-    // Crear tabla de usuarios
+    // 1. Crear tabla de usuarios
     const createUsersTable = `
         CREATE TABLE IF NOT EXISTS users (
             id INT AUTO_INCREMENT PRIMARY KEY,
@@ -35,7 +36,7 @@ db.connect((err) => {
             console.log('✅ Tabla "users" creada o ya existía');
         }
 
-        // Crear tabla de productos
+        // 2. Crear tabla de productos
         const createProductosTable = `
             CREATE TABLE IF NOT EXISTS productos (
                 id INT AUTO_INCREMENT PRIMARY KEY,
@@ -56,27 +57,46 @@ db.connect((err) => {
                 console.log('✅ Tabla "productos" creada o ya existía');
             }
 
-            // Insertar usuario admin
-            const hashedPassword = bcrypt.hashSync('admin123', 10);
-            const insertAdmin = `
-                INSERT INTO users (nombre, email, password) 
-                VALUES ('Admin', 'admin@example.com', ?)
-                ON DUPLICATE KEY UPDATE nombre=nombre;
-            `;
+            // 3. Insertar usuario admin (solo si no existe)
+            const adminEmail = 'admin@example.com';
+            const adminPassword = 'admin123';
+            const hashedPassword = bcrypt.hashSync(adminPassword, 10);
 
-            db.query(insertAdmin, [hashedPassword], (err, results) => {
+            const checkAdmin = 'SELECT id FROM users WHERE email = ?';
+            db.query(checkAdmin, [adminEmail], (err, results) => {
                 if (err) {
-                    console.error('❌ Error insertando usuario admin:', err);
+                    console.error('❌ Error al verificar usuario admin:', err);
+                } else if (results.length === 0) {
+                    // Insertar admin
+                    const insertAdmin = `
+                        INSERT INTO users (nombre, email, password)
+                        VALUES ('Administrador', ?, ?)
+                    `;
+                    db.query(insertAdmin, [adminEmail, hashedPassword], (err, results) => {
+                        if (err) {
+                            console.error('❌ Error insertando usuario admin:', err);
+                        } else {
+                            console.log('✅ Usuario admin creado: admin@example.com / admin123');
+                        }
+                        finalize();
+                    });
                 } else {
-                    console.log('✅ Usuario admin creado o ya existía');
+                    console.log('✅ Usuario admin ya existía');
+                    finalize();
                 }
-
-                // Cierra la conexión solo si este script se ejecuta manualmente
-                db.end(() => {
-                    console.log('🔌 Conexión cerrada');
-                    process.exit(0); // Termina el proceso
-                });
             });
         });
     });
 });
+
+// Función para cerrar conexión y terminar proceso
+function finalize() {
+    db.end((err) => {
+        if (err) {
+            console.error('❌ Error al cerrar conexión:', err);
+        } else {
+            console.log('🔌 Conexión a base de datos cerrada');
+        }
+        process.exit(0);
+    });
+}
