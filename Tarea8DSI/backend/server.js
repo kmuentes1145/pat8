@@ -54,4 +54,22 @@ await db.query("DELETE FROM productos WHERE id=?",[req.params.id]);
 res.json({msg:"Eliminado"});
 });
 
+
+// ✏️ EDITAR PRODUCTO
+app.put("/productos/:id", async (req, res) => {
+  const { nombre, codigo, categoria, precio, stock, descripcion } = req.body;
+  const { id } = req.params;
+
+  await db.query(
+    `UPDATE productos 
+     SET nombre = ?, codigo = ?, categoria = ?, precio = ?, stock = ?, descripcion = ?
+     WHERE id = ?`,
+    [nombre, codigo, categoria, precio, stock, descripcion, id]
+  );
+
+  res.json({ msg: "Producto actualizado" });
+});
+
+
+
 app.listen(PORT,"0.0.0.0",()=>console.log("🚀 Backend activo"));
